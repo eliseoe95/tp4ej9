@@ -10,7 +10,9 @@ const FormVeterinaria = () => {
   const [hora, setHora] = useState('')
   const [sintoma, setSintoma] = useState('')
   const citasLocalStorage = JSON.parse(localStorage.getItem('citas')) || [];
-  const [citas, setCitas] = useState(citasLocalStorage)
+  const [citas, setCitas] = useState(citasLocalStorage);
+  const expresionRegularfecha = (/^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[/\\/](19|20)\d{2}$/);
+  const expresionRegularHora = (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/);
   const handleSubmit = (e) => {
     e.preventDefault()
     let cita = {
@@ -42,6 +44,47 @@ const FormVeterinaria = () => {
   }else{
     mensaje='';
   }
+  const validarNombre = (inputMascota) => {
+    if(nombremascota.length<1){
+      inputMascota.classList.add('is-invalid')
+    }else{
+      inputMascota.classList.remove('is-invalid')
+      inputMascota.classList.add('is-valid')
+    }
+  }
+    const validarNombreDueno = (inputDueno) => {
+      if(nombredueno.length<1){
+        inputDueno.classList.add('is-invalid');
+      }else{
+        inputDueno.classList.remove('is-invalid');
+        inputDueno.classList.add('is-valid');
+      }
+  }
+  const validarFecha = (inputFecha)=>{
+    if(expresionRegularfecha.test(!inputFecha)){
+    inputFecha.classList.add('is-invalid');
+    }
+    else{
+      inputFecha.classList.remove('is-invalid');
+      inputFecha.classList.add('is-valid');
+    }
+  }
+  const validarHora = (inputHora)=>{
+    if(expresionRegularHora.test(!inputHora)){
+    inputHora.classList.add('is-invalid');
+    }
+    else{
+      inputHora.classList.remove('is-invalid');
+      inputHora.classList.add('is-valid');
+    }
+  }
+  const validarSintoma = (inputSintoma) => {
+    if(sintoma.length<1){
+      inputSintoma.classList.add('is-invalid');
+    }else{
+      inputSintoma.classList.remove('is-invalid');
+      inputSintoma.classList.add('is-valid');
+    }}
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
@@ -50,7 +93,8 @@ const FormVeterinaria = () => {
             Nombre de mascota
           </Form.Label>
           <Col sm={10}>
-            <Form.Control onChange={(e) => setNombremascota(e.target.value)}
+            <Form.Control required onChange={(e) =>{ setNombremascota(e.target.value);
+            validarNombre(e.target)}}
               value={nombremascota} type="text" placeholder="nombre de la mascota" />
           </Col>
         </Form.Group>
@@ -64,7 +108,7 @@ const FormVeterinaria = () => {
             Nombre de dueño
           </Form.Label>
           <Col sm={10}>
-            <Form.Control onChange={(e) => setNombredueno(e.target.value)}
+            <Form.Control required onChange={(e) => {setNombredueno(e.target.value); validarNombreDueno(e.target)}}
               value={nombredueno} type="text" placeholder="nombre de dueño" />
           </Col>
         </Form.Group>
@@ -75,7 +119,7 @@ const FormVeterinaria = () => {
                 Fecha
               </Form.Label>
               <Col sm={8}>
-                <Form.Control onChange={(e) => setFecha(e.target.value)}
+                <Form.Control required onChange={(e) => {setFecha(e.target.value); validarFecha(e.target)}}
               value={fecha} type="date" placeholder="dd/mm/vvvv" />
               </Col>
             </Form.Group>
@@ -86,7 +130,7 @@ const FormVeterinaria = () => {
                 Hora
               </Form.Label>
               <Col sm={8}>
-                <Form.Control onChange={(e) => setHora(e.target.value)}
+                <Form.Control required onChange={(e) => {setHora(e.target.value); validarHora(e.target)}}
               value={hora} type="time" placeholder="hh:mm" />
               </Col>
             </Form.Group>
@@ -97,8 +141,8 @@ const FormVeterinaria = () => {
             Sintomas
           </Form.Label>
           <Col sm={10}>
-            <Form.Control
-            onChange={(e) => setSintoma(e.target.value)}
+            <Form.Control required
+            onChange={(e) => {setSintoma(e.target.value); validarSintoma(e.target)}}
             value={sintoma}
               sm={10}
               type="text"
@@ -116,6 +160,5 @@ const FormVeterinaria = () => {
       <p className='text-center fw-bold'>{mensaje}</p>
     </Container>
   )
-}
-
+            }
 export default FormVeterinaria
